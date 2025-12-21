@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -20,6 +21,7 @@ import { MensajesModule } from './mensajes/mensajes.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.MONGO_URI || ''),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -43,8 +45,7 @@ import { MensajesModule } from './mensajes/mensajes.module';
     TipoLibroModule,
     EstadoLibroModule,
     ComentariosModule,
-    MensajesModule,
-    
+    MensajesModule,    
   ],
   controllers: [AppController],
   providers: [AppService],
