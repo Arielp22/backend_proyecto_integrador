@@ -11,6 +11,9 @@ export class Multa {
   @Column()
   monto: number;
 
+  @Column()
+  motivo: string;
+
   @Column({ default: false })
   pagado: boolean;
 }

@@ -7,4 +7,7 @@ export class TipoLibro {
 
   @Column()
   nombre: string;
+
+  @Column({ nullable: true })
+  descripcion: string;
 }

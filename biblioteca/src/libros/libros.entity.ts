@@ -8,9 +8,30 @@ export class Libro {
   @Column()
   titulo: string;
 
-  @Column()
+  @Column({ nullable: true })
+  autor: string;
+
+  @Column({ nullable: true })
   anio_publicacion: number;
 
+  @Column({ nullable: true })
+  numero_paginas: number;
+
   @Column()
-  stock: number;
+  cantidad_disponible: number;
+
+  @Column({ nullable: true })
+  categoria_id: string;
+
+  @Column({ nullable: true })
+  editorial_id: string;
+
+  @Column({ nullable: true })
+  idioma_id: string;
+
+  @Column({ nullable: true })
+  tipo_libro_id: string;
+
+  @Column({ nullable: true })
+  estado_id: string;
 }

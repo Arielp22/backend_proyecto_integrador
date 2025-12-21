@@ -14,6 +14,18 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  nombre: string;
+
+  @Column({ nullable: true })
+  apellido: string;
+
+  @Column({ nullable: true })
+  telefono: string;
+
+  @Column({ nullable: true })
+  direccion: string;
+
   @Column({ default: 'user' })
   role: string;
 

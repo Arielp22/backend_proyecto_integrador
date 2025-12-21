@@ -2,9 +2,12 @@ import {
   Controller, Get, Post, Put, Delete, Body, Param,
   Query, BadRequestException, NotFoundException,
   UseInterceptors, UploadedFile,
-  InternalServerErrorException
+  InternalServerErrorException, UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SuccessResponseDto } from 'src/common/dto/response.dto';
@@ -18,6 +21,8 @@ import { QueryDto } from 'src/common/dto/query.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Post()
   async create(@Body() dto: CreateUserDto) {
     const user = await this.usersService.create(dto);
@@ -37,10 +42,8 @@ export class UsersController {
       throw new BadRequestException('Invalid value for "isActive". Use "true" or "false".');
     }
 
-    const result = await this.usersService.findAll(
-      query,
-      isActive === 'true',
-    );
+    const activeFilter = isActive === undefined ? undefined : isActive === 'true';
+    const result = await this.usersService.findAll(query, activeFilter);
 
     if (!result) throw new InternalServerErrorException('Could not retrieve users');
 
@@ -54,7 +57,8 @@ export class UsersController {
     return new SuccessResponseDto('User retrieved successfully', user);
   }
 
-  
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const user = await this.usersService.remove(id);
@@ -62,6 +66,7 @@ export class UsersController {
     return new SuccessResponseDto('User deleted successfully', user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('profile/:id')
   @UseInterceptors(FileInterceptor('profile', {
     storage: diskStorage({
@@ -83,6 +88,7 @@ export class UsersController {
     return new SuccessResponseDto('Profile image updated', user);
   }
   
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
 

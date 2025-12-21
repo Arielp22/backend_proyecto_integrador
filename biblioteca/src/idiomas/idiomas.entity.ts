@@ -7,4 +7,7 @@ export class Idioma {
 
   @Column()
   nombre: string;
+
+  @Column({ nullable: true })
+  codigo: string;
 }
